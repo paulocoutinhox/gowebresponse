@@ -2,6 +2,8 @@
 
 Golang WebRespone class for web and service
 
+With this library you can always send the same json structure to your web response, it turn development very fast and easy because to other part always know what it will receive
+
 # Installing
 
 ```bash
