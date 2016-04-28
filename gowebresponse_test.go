@@ -1,8 +1,8 @@
 package gowebresponse
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestNewList(t *testing.T) {
@@ -83,7 +83,7 @@ func TestAddDataError(t *testing.T) {
 	}
 
 	var jsonResult = jsonData
-	var jsonExpected = `{"success":false,"message":"","data":{"errors":{"key":"value"}}}`
+	var jsonExpected = `{"success":false,"message":"","data":{"errors":[["key","value"]]}}`
 
 	if jsonExpected != jsonResult {
 		t.Errorf("Invalid json result: %s", jsonResult)
@@ -93,7 +93,8 @@ func TestAddDataError(t *testing.T) {
 func TestAddDataAndAddDataError(t *testing.T) {
 	wr := NewGoWebResponse()
 	wr.AddData("key", "value")
-	wr.AddDataError("key", "value")
+	wr.AddDataError("errorKey1", "errorValue1")
+	wr.AddDataError("errorKey2", "errorValue2")
 
 	jsonData, err := wr.ToString()
 
@@ -103,7 +104,7 @@ func TestAddDataAndAddDataError(t *testing.T) {
 	}
 
 	var jsonResult = jsonData
-	var jsonExpected = `{"success":false,"message":"","data":{"errors":{"key":"value"},"key":"value"}}`
+	var jsonExpected = `{"success":false,"message":"","data":{"errors":[["errorKey1","errorValue1"],["errorKey2","errorValue2"]],"key":"value"}}`
 
 	if jsonExpected != jsonResult {
 		t.Errorf("Invalid json result: %s", jsonResult)
@@ -123,7 +124,7 @@ func TestClearDataError(t *testing.T) {
 	}
 
 	var jsonResult = jsonData
-	var jsonExpected = `{"success":false,"message":"","data":{"errors":{}}}`
+	var jsonExpected = `{"success":false,"message":"","data":{"errors":[]}}`
 
 	if jsonExpected != jsonResult {
 		t.Errorf("Invalid json result: %s", jsonResult)
@@ -232,5 +233,5 @@ func ExampleHowToUse() {
 	jsonData, _ := wr.ToString()
 	fmt.Print(jsonData)
 
-	// Output: {"success":false,"message":"","data":{"errors":{}}}
+	// Output: {"success":false,"message":"","data":{"errors":[]}}
 }

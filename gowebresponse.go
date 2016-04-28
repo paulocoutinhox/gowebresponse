@@ -1,8 +1,8 @@
 package gowebresponse
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 )
 
 type WebResponse struct {
@@ -36,8 +36,12 @@ func (s *WebResponse) ClearDataErrors() {
 		s.Data = make(map[string]interface{})
 	}
 
-	v := make(map[string]string)
-	s.Data["errors"] = v
+	m := make([]struct {
+		Key   string `json:"0"`
+		Value string `json:"1"`
+	}, 0)
+
+	s.Data["errors"] = m
 }
 
 func (s *WebResponse) AddDataError(key string, message string) error {
@@ -48,17 +52,23 @@ func (s *WebResponse) AddDataError(key string, message string) error {
 	errMap, ok := s.Data["errors"]
 
 	if !ok {
-		v := make(map[string]string)
-		v[key] = message
-		s.Data["errors"] = v
+		v := [2]string{key, message}
+
+		m := make([][2]string, 0)
+		m = append(m, v)
+		s.Data["errors"] = m
+
 		return nil
 	}
 
-	switch v := errMap.(type) {
+	switch m := errMap.(type) {
 	default:
-		return fmt.Errorf("Unexpected type: %T", v)
-	case map[string]string:
-		v[key] = message
+		return fmt.Errorf("Unexpected type: %T", m)
+	case [][2]string:
+		v := [2]string{key, message}
+
+		m = append(m, v)
+		s.Data["errors"] = m
 	}
 
 	return nil
