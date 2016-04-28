@@ -52,7 +52,7 @@ func ExampleHowToUse() {
 	jsonData, _ := wr.ToString()
 	fmt.Print(jsonData)
 
-	// Output: {"success":false,"message":"","data":{"errors":{}}}
+	// Output: {"success":false,"message":"","data":{"errors":[]}}
 }
 ```
 
